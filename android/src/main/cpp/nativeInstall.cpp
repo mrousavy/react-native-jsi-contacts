@@ -1,5 +1,4 @@
 #include <jni.h>
-#include "example.h"
 
 extern "C"
 JNIEXPORT jint JNICALL
