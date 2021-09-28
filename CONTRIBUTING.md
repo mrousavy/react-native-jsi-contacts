@@ -53,7 +53,7 @@ yarn test
 
 To edit the Objective-C files, open `example/ios/JsiContactsExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-jsi-contacts`.
 
-To edit the Kotlin files, open `example/android` in Android studio and find the source files at `reactnativejsicontacts` under `Android`.
+To edit the Kotlin files, open `example/android` in Android studio and find the source files at `mrousavy.jsi.contacts` under `Android`.
 
 ### Commit message convention
 

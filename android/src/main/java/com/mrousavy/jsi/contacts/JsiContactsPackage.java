@@ -1,4 +1,4 @@
-package com.reactnativejsicontacts;
+package com.mrousavy.jsi.contacts;
 
 import androidx.annotation.NonNull;
 

@@ -1,4 +1,4 @@
-package com.example.reactnativejsicontacts;
+package com.example.jsicontacts;
 
 import com.facebook.react.ReactActivity;
 

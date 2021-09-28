@@ -128,7 +128,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.reactnativejsicontacts"
+        applicationId "com.example.jsicontacts"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
