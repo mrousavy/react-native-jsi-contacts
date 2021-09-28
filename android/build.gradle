@@ -27,22 +27,18 @@ def parentDir = rootProject.projectDir
 if (rootProject.ext.has('reactNativeAndroidRoot')) {
   reactNativeDir = rootProject.ext.get('reactNativeAndroidRoot')
 } else {
-  reactNativeDir = new File(
-          projectDir,
-          '/../../../node_modules/react-native/android'
-  )
+  reactNativeDir = new File(projectDir, '/../node_modules/react-native/android')
 }
+
 if (reactNativeDir.exists()) {
   found = true
 } else {
+  def stepUp = "/../"
   1.upto(5, {
     if (found) return true
-    parentDir = reactNativeDir.parentFile
 
-    reactNativeDir = new File(
-            parentDir,
-            'node_modules/react-native/android'
-    )
+    stepUp = stepUp + "../"
+    reactNativeDir = new File(stepUp, 'node_modules/react-native/android')
 
     if (reactNativeDir.exists()) {
       found = true
@@ -114,7 +110,7 @@ repositories {
 
   if (!found) {
     throw new GradleException(
-            "${project.name}: unable to locate React Native android sources. " +
+            "${project.name}: unable to locate React Native android sources. ${reactNativeDir.toString()} " +
                     "Ensure you have you installed React Native as a dependency in your project and try again."
     )
   }
