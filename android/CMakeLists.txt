@@ -37,7 +37,6 @@ find_library(
 
 target_link_libraries(
         jsicontacts
-        core
         ${log-lib}
         ${REACT_NATIVE_JNI_LIB}
         android
