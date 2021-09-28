@@ -2,5 +2,5 @@ rootProject.name = 'JsiContactsExample'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
 
-include ':reactnativejsicontacts'
-project(':reactnativejsicontacts').projectDir = new File(rootProject.projectDir, '../../android')
+include ':jsicontacts'
+project(':jsicontacts').projectDir = new File(rootProject.projectDir, '../../android')
