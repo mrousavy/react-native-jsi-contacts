@@ -8,9 +8,10 @@ A contacts library for React Native using JSI
 npm install react-native-jsi-contacts
 ```
 
-<a href="https://www.galaxycard.in"><img src="https://www.galaxycard.in/img/logo.svg" align="right" height="50"></a>
 
 ## Sponsors
+
+<a href="https://www.galaxycard.in"><img src="https://www.galaxycard.in/img/logo.svg" align="right" height="50"></a>
 
 This project is sponsored by [Galaxycard](https://www.galaxycard.in).
 
