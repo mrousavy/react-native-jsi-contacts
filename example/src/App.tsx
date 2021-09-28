@@ -1,18 +1,23 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-jsi-contacts';
+import { Contact, getContactsAsync } from 'react-native-jsi-contacts';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const [result, setResult] = React.useState<Contact[]>([]);
 
   React.useEffect(() => {
-    multiply(3, 7).then(setResult);
+    getContactsAsync().then(setResult);
   }, []);
+
+  const str = React.useMemo(
+    () => result.map((c) => c.firstName).join(', '),
+    [result]
+  );
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Result: {str}</Text>
     </View>
   );
 }

@@ -17,6 +17,10 @@ const JsiContacts = NativeModules.JsiContacts
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return JsiContacts.multiply(a, b);
+export interface Contact {
+  firstName: string;
+}
+
+export function getContactsAsync(): Promise<Contact[]> {
+  return JsiContacts.getContactsAsync();
 }
