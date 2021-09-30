@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Alert, FlatList } from 'react-native';
 import { Contact, getContactsAsync } from 'react-native-jsi-contacts';
-import { getAll } from 'react-native-contacts';
 import { check, PERMISSIONS, request } from 'react-native-permissions';
 
 export default function App() {
@@ -20,22 +19,9 @@ export default function App() {
     }
 
     console.log(`JSI: Contacts Permission: ${permission}`);
-    const begin = global.performance.now();
     const contacts = await getContactsAsync();
-    const end = global.performance.now();
     const arr = Object.keys(contacts).map((key) => contacts[key]);
-    console.log(`JSI: Got: ${arr.length} contacts in ${end - begin}ms.`);
     setResult(arr);
-
-    {
-      console.log(`Bridge: Contacts Permission: ${permission}`);
-      const begin = global.performance.now();
-      const contacts = await getAll();
-      const end = global.performance.now();
-      console.log(
-        `Bridge: Got: ${contacts.length} contacts in ${end - begin}ms.`
-      );
-    }
   }, []);
 
   React.useEffect(() => {
