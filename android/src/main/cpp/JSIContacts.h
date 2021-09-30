@@ -24,6 +24,7 @@ private:
     multithreading::ThreadPool _threadPool;
     jni::global_ref<mrousavy::JContactsProvider::javaobject> _contactsProvider;
     jsi::Value getContactsAsync(jsi::Runtime& runtime);
+    jsi::Value getHashAsync(jsi::Runtime& runtime);
 };
 
 }

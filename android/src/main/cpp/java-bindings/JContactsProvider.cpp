@@ -10,14 +10,20 @@
 
 namespace mrousavy {
 
-using namespace facebook;
-using namespace jni;
+    using namespace facebook;
+    using namespace jni;
 
-local_ref<JMap<JString, JContact::javaobject>> JContactsProvider::getContacts() const {
-    auto getContactsMethod = getClass()->getMethod<JMap<JString, JContact::javaobject>()>("getContacts");
+    local_ref<JMap<JString, JContact::javaobject>> JContactsProvider::getContacts() const {
+        auto getContactsMethod = getClass()->getMethod<JMap<JString, JContact::javaobject>()>("getContacts");
 
-    auto result = getContactsMethod(self());
-    return make_local(result);
-}
+        auto result = getContactsMethod(self());
+        return make_local(result);
+    }
+
+    local_ref<jstring> JContactsProvider::getHash() const {
+        auto getHashMethod = getClass()->getMethod<jstring()>("getHash");
+
+        return getHashMethod(self());
+    }
 
 }

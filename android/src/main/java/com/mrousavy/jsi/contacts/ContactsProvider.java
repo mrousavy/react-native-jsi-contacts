@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -386,5 +388,27 @@ public class ContactsProvider {
     }
 
     return map;
+  }
+
+  public String getHash() throws NoSuchAlgorithmException {
+    Map<String, Contact> contacts = this.getContacts();
+
+    StringBuilder stringBuilder = new StringBuilder();
+    for (Map.Entry<String, Contact> entry : contacts.entrySet()) {
+      stringBuilder.append(entry.getValue().contactId);
+    }
+    MessageDigest digest = MessageDigest.getInstance("MD5");
+    digest.update(stringBuilder.toString().getBytes());
+    byte[] messageDigest = digest.digest();
+
+    // Create Hex String
+    StringBuilder hexString = new StringBuilder();
+    for (byte b : messageDigest) {
+      StringBuilder hex = new StringBuilder(Integer.toHexString(0xFF & b));
+      while (hex.length() < 2)
+        hex.insert(0, "0");
+      hexString.append(hex);
+    }
+    return hexString.toString();
   }
 }

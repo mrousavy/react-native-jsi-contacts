@@ -19,6 +19,7 @@ struct JContactsProvider : public JavaClass<JContactsProvider> {
 
 public:
     local_ref<JMap<JString, JContact::javaobject>> getContacts() const;
+    local_ref<jstring> getHash() const;
 };
 
 } // namespace vision

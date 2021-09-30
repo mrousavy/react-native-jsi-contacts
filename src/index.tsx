@@ -1,5 +1,6 @@
 interface JSIContactsInterface {
   getContactsAsync(): Promise<Record<Contact['contactId'], Contact>>;
+  getHashAsync(): Promise<string>;
 }
 
 // Globally injected JSI Function declarations
@@ -63,4 +64,8 @@ export function getContactsAsync(): Promise<
   Record<Contact['contactId'], Contact>
 > {
   return JSIContacts.getContactsAsync();
+}
+
+export function getHashAsync(): Promise<string> {
+  return JSIContacts.getHashAsync();
 }
