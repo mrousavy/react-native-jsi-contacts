@@ -29,15 +29,11 @@ export default function App() {
     load();
   }, [load]);
 
-  const str = React.useMemo(
-    () => result.map((c) => c.displayName).join(', '),
-    [result]
-  );
-
   return (
     <View style={styles.container}>
       <FlatList
         data={result}
+        keyExtractor={(contact) => contact.recordID}
         renderItem={({ item }) => (
           <Text style={{ marginTop: 5 }}>{item.displayName}</Text>
         )}
