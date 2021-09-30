@@ -16,6 +16,7 @@ import android.util.Log;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -240,7 +241,7 @@ public class ContactsProvider {
     return count;
   }
 
-  public WritableArray getContacts() {
+  public WritableNativeArray getContacts() {
     Map<String, Contact> justMe;
     {
       Cursor cursor = contentResolver.query(
@@ -297,7 +298,7 @@ public class ContactsProvider {
       }
     }
 
-    WritableArray contacts = Arguments.createArray();
+    WritableNativeArray contacts = new WritableNativeArray();
     for (Contact contact : justMe.values()) {
       contacts.pushMap(contact.toMap());
     }

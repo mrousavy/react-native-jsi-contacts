@@ -25,7 +25,6 @@ public class JsiContactsModule extends ReactContextBaseJavaModule {
     static {
         System.loadLibrary("jsicontacts");
     }
-    private static ContactsProvider contactsProvider;
 
     @Override
     @NonNull
@@ -36,17 +35,10 @@ public class JsiContactsModule extends ReactContextBaseJavaModule {
     public static void install(ReactContext context) {
       JavaScriptContextHolder jsContext = context.getJavaScriptContextHolder();
       CallInvokerHolderImpl callInvokerHolder = (CallInvokerHolderImpl) context.getCatalystInstance().getJSCallInvokerHolder();
-      contactsProvider = new ContactsProvider(context.getContentResolver());
-      nativeInstall(jsContext.get(), callInvokerHolder);
+      ContactsProvider contactsProvider = new ContactsProvider(context.getContentResolver());
+
+      nativeInstall(contactsProvider, jsContext.get(), callInvokerHolder);
     }
 
-    private static native void nativeInstall(long jsiPtr, CallInvokerHolderImpl callInvoker);
-
-    private static WritableNativeMap getContacts() {
-      ReadableArray contacts = contactsProvider.getContacts();
-
-      WritableNativeMap map = new WritableNativeMap();
-      map.putArray("contacts", contacts);
-      return map;
-    }
+    private static native void nativeInstall(ContactsProvider contactsProvider, long jsiPtr, CallInvokerHolderImpl callInvoker);
 }

@@ -44,10 +44,7 @@ jsi::Value JSIContacts::getContactsAsync(jsi::Runtime& runtime) {
         _threadPool.enqueue([this, &runtime, resolver, rejecter]() {
             try {
                 jni::ThreadScope scope;
-                auto clzz = jni::findClassStatic("com/mrousavy/jsi/contacts/JsiContactsModule");
-                auto func = clzz->getStaticMethod<react::WritableNativeMap::javaobject()>("getContacts");
-                auto weakContacts = func(clzz);
-                auto contacts = make_local(weakContacts);
+                auto contacts = this->_contactsProvider->getContacts();
 
                 // ASYNC
                 this->_callInvoker->invokeAsync([&runtime, resolver, contacts]() {
