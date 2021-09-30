@@ -103,14 +103,13 @@ namespace mrousavy {
             _threadPool.enqueue([this, &runtime, resolver, rejecter]() {
                 try {
                     jni::ThreadScope scope;
-                    auto hash = this->_contactsProvider->getHash();
-                    std::string string = hash->toStdString();
+                    auto hashJString = this->_contactsProvider->getHash();
+                    std::string hash = hashJString->toStdString();
 
                     // ASYNC
-                    this->_callInvoker->invokeAsync([&runtime, resolver, string]() {
-                        jni::ThreadScope scope;
+                    this->_callInvoker->invokeAsync([&runtime, resolver, hash]() {
                         // JS
-                        auto jsiValue = jsi::String::createFromUtf8(runtime, string);
+                        auto jsiValue = jsi::String::createFromUtf8(runtime, hash);
                         resolver->call(runtime, jsiValue);
                     });
                 } catch (std::exception& exception) {
