@@ -1,7 +1,7 @@
 #include "JSIContacts.h"
 #include <thread>
 #include <fbjni/fbjni.h>
-#include <react/jni/WritableNativeArray.h>
+#include <react/jni/WritableNativeMap.h>
 
 namespace mrousavy {
 
@@ -45,11 +45,12 @@ jsi::Value JSIContacts::getContactsAsync(jsi::Runtime& runtime) {
             try {
                 jni::ThreadScope scope;
                 auto clzz = jni::findClassStatic("com/mrousavy/jsi/contacts/JsiContactsModule");
-                auto func = clzz->getStaticMethod<int()>("getContacts");
-                auto contacts = func(clzz);
+                auto func = clzz->getStaticMethod<react::WritableNativeMap::javaobject()>("getContacts");
+                auto weakContacts = func(clzz);
+                auto contacts = make_local(weakContacts);
 
                 // ASYNC
-                this->_callInvoker->invokeAsync([&runtime, resolver]() {
+                this->_callInvoker->invokeAsync([&runtime, resolver, contacts]() {
                     // JS
                     resolver->call(runtime, jsi::Value(0));
                 });
