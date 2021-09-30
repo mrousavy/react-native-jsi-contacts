@@ -10,7 +10,7 @@ import java.util.List;
 public class JsiContactsJSIPackage implements JSIModulePackage {
   @Override
   public List<JSIModuleSpec> getJSIModules(ReactApplicationContext reactApplicationContext, JavaScriptContextHolder jsContext) {
-    JsiContactsModule.install(reactApplicationContext, jsContext);
+    JsiContactsModule.install(reactApplicationContext);
     return Collections.emptyList();
   }
 }
