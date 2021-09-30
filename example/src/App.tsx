@@ -1,7 +1,35 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Alert, FlatList } from 'react-native';
 import { Contact, getContactsAsync } from 'react-native-jsi-contacts';
+import { getAll } from 'react-native-contacts';
 import { check, PERMISSIONS, request } from 'react-native-permissions';
+
+declare global {
+  var performance: {
+    now: () => number;
+  };
+}
+
+async function runBenchmark() {
+  {
+    console.log(`[JSI] Begin Benchmark..`);
+    const begin = global.performance.now();
+    const contacts = await getContactsAsync();
+    const end = global.performance.now();
+    const arr = Object.keys(contacts).map((key) => contacts[key]);
+    console.log(`[JSI] Got ${arr.length} contacts in ${end - begin}ms.`);
+  }
+
+  {
+    console.log(`[Bridge] Begin Benchmark..`);
+    const begin = global.performance.now();
+    const contacts = await getAll();
+    const end = global.performance.now();
+    console.log(
+      `[Bridge] Got ${contacts.length} contacts in ${end - begin}ms.`
+    );
+  }
+}
 
 export default function App() {
   const [result, setResult] = React.useState<Contact[]>([]);
@@ -22,6 +50,8 @@ export default function App() {
     const contacts = await getContactsAsync();
     const arr = Object.keys(contacts).map((key) => contacts[key]);
     setResult(arr);
+
+    setTimeout(runBenchmark, 2000);
   }, []);
 
   React.useEffect(() => {
