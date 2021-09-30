@@ -18,7 +18,7 @@ struct JContact : public HybridClass<JContact> {
     static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
     static void registerNatives();
 
-    alias_ref<jobject> getValueByName(const std::string& name);
+    local_ref<jobject> getValueByName(const std::string& name);
 private:
     friend HybridBase;
     jni::global_ref<JContact::javaobject> javaPart_;
