@@ -23,7 +23,24 @@ ContactHostObject::~ContactHostObject() {
 std::vector<jsi::PropNameID> ContactHostObject::getPropertyNames(jsi::Runtime &rt) {
     std::vector<jsi::PropNameID> result;
     result.push_back(jsi::PropNameID::forUtf8(rt, std::string("contactId")));
-    // TODO: Add others.
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("displayName")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("givenName")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("middleName")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("familyName")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("prefix")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("suffix")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("company")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("jobTitle")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("department")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("note")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("urls")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("instantMessengers")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("hasPhoto")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("photoUri")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("emails")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("phones")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("postalAddresses")));
+    result.push_back(jsi::PropNameID::forUtf8(rt, std::string("birthday")));
     return result;
 }
 
