@@ -9,7 +9,9 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.provider.ContactsContract.CommonDataKinds.Contactables;
 import static android.provider.ContactsContract.CommonDataKinds.Email;
@@ -41,7 +43,7 @@ public class Contact {
   public String photoUri;
   public List<Item> emails = new ArrayList<>();
   public List<Item> phones = new ArrayList<>();
-  public List<PostalAddressItem> postalAddresses = new ArrayList<>();
+  public List<Map<String, String>> postalAddresses = new ArrayList<>();
   public Birthday birthday;
 
   public Contact(String contactId) {
@@ -82,31 +84,30 @@ public class Contact {
     }
   }
 
-  public static class PostalAddressItem {
-    public final WritableMap map;
+  public static class PostalAddress {
 
-    public PostalAddressItem(Cursor cursor) {
-      map = Arguments.createMap();
-
-      map.putString("label", getLabel(cursor));
-      putString(cursor, "formattedAddress", StructuredPostal.FORMATTED_ADDRESS);
-      putString(cursor, "street", StructuredPostal.STREET);
-      putString(cursor, "pobox", StructuredPostal.POBOX);
-      putString(cursor, "neighborhood", StructuredPostal.NEIGHBORHOOD);
-      putString(cursor, "city", StructuredPostal.CITY);
-      putString(cursor, "region", StructuredPostal.REGION);
-      putString(cursor, "state", StructuredPostal.REGION);
-      putString(cursor, "postCode", StructuredPostal.POSTCODE);
-      putString(cursor, "country", StructuredPostal.COUNTRY);
+    public static HashMap<String, String> postalAddressFromCursor(Cursor cursor) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put("label", getLabel(cursor));
+      putString(map, cursor, "formattedAddress", StructuredPostal.FORMATTED_ADDRESS);
+      putString(map, cursor, "street", StructuredPostal.STREET);
+      putString(map, cursor, "pobox", StructuredPostal.POBOX);
+      putString(map, cursor, "neighborhood", StructuredPostal.NEIGHBORHOOD);
+      putString(map, cursor, "city", StructuredPostal.CITY);
+      putString(map, cursor, "region", StructuredPostal.REGION);
+      putString(map, cursor, "state", StructuredPostal.REGION);
+      putString(map, cursor, "postCode", StructuredPostal.POSTCODE);
+      putString(map, cursor, "country", StructuredPostal.COUNTRY);
+      return map;
     }
 
-    private void putString(Cursor cursor, String key, String androidKey) {
+    private static void putString(HashMap<String, String> map, Cursor cursor, String key, String androidKey) {
       final String value = cursor.getString(cursor.getColumnIndex(androidKey));
       if (!TextUtils.isEmpty(value))
-        map.putString(key, value);
+        map.put(key, value);
     }
 
-    static String getLabel(Cursor cursor) {
+    private static String getLabel(Cursor cursor) {
       switch (cursor.getInt(cursor.getColumnIndex(StructuredPostal.TYPE))) {
         case StructuredPostal.TYPE_HOME:
           return "home";

@@ -498,7 +498,7 @@ public class ContactsProvider {
           contact.department = cursor.getString(cursor.getColumnIndex(Organization.DEPARTMENT));
           break;
         case StructuredPostal.CONTENT_ITEM_TYPE:
-          contact.postalAddresses.add(new Contact.PostalAddressItem(cursor));
+          contact.postalAddresses.add(Contact.PostalAddress.postalAddressFromCursor(cursor));
           break;
         case Event.CONTENT_ITEM_TYPE:
           int eventType = cursor.getInt(cursor.getColumnIndex(Event.TYPE));

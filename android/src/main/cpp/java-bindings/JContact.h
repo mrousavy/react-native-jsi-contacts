@@ -18,9 +18,17 @@ struct JContact : public JavaClass<JContact> {
 
     struct JItem : public JavaClass<JItem> {
         static constexpr auto kJavaDescriptor = "Lcom/mrousavy/jsi/contacts/Contact$Item;";
+
+        local_ref<jstring> getLabel();
+        local_ref<jstring> getValue();
+        local_ref<jstring> getId();
     };
     struct JBirthday : public JavaClass<JBirthday> {
         static constexpr auto kJavaDescriptor = "Lcom/mrousavy/jsi/contacts/Contact$Birthday;";
+
+        jint getYear();
+        jint getMonth();
+        jint getDay();
     };
     struct JPostalAddressItem : public JavaClass<JPostalAddressItem> {
         static constexpr auto kJavaDescriptor = "Lcom/mrousavy/jsi/contacts/Contact$PostalAddressItem;";
