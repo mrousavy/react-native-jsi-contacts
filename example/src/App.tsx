@@ -7,7 +7,10 @@ export default function App() {
   const [result, setResult] = React.useState<Contact[]>([]);
 
   React.useEffect(() => {
-    getContactsAsync().then(setResult);
+    getContactsAsync().then((contacts) => {
+      console.log(`Got: ${JSON.stringify(contacts)}`);
+      setResult(contacts);
+    });
   }, []);
 
   const str = React.useMemo(
