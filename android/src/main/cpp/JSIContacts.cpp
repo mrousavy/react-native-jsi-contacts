@@ -46,11 +46,15 @@ jsi::Value JSIContacts::getContactsAsync(jsi::Runtime& runtime) {
             try {
                 jni::ThreadScope scope;
                 auto contacts = this->_contactsProvider->getContacts();
+                // TODO: USE LOCAL REF DIRECTLY, THIS IS A WACK WORKAROUND!
+                auto globalContacts = make_global(contacts);
 
                 // ASYNC
-                this->_callInvoker->invokeAsync([&runtime, resolver, contacts]() {
+                this->_callInvoker->invokeAsync([&runtime, resolver, globalContacts]() {
+                    jni::ThreadScope scope;
                     // JS
-                    auto jsiValue = vision::JSIJNIConversion::convertJNIObjectToJSIValue(runtime, contacts);
+                    auto localAgain = make_local(globalContacts);
+                    auto jsiValue = vision::JSIJNIConversion::convertJNIObjectToJSIValue(runtime, localAgain);
                     resolver->call(runtime, jsiValue);
                 });
             } catch (std::exception& exception) {
