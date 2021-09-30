@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Alert, FlatList } from 'react-native';
-import { Contact, getContactsAsync } from 'react-native-jsi-contacts';
+import {
+  Contact,
+  getContactsAsync,
+  getHashAsync,
+} from 'react-native-jsi-contacts';
 import { getAll } from 'react-native-contacts';
 import { check, PERMISSIONS, request } from 'react-native-permissions';
 
@@ -28,6 +32,14 @@ async function runBenchmark() {
     console.log(
       `[Bridge] Got ${contacts.length} contacts in ${end - begin}ms.`
     );
+  }
+
+  {
+    console.log(`[JSI] Getting Contacts Hash...`);
+    const begin = global.performance.now();
+    const hash = await getHashAsync();
+    const end = global.performance.now();
+    console.log(`[JSI] Got contacts hash: ${hash} in ${end - begin}ms.`);
   }
 }
 
