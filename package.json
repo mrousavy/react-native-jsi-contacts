@@ -10,16 +10,12 @@
   "files": [
     "src",
     "lib",
-    "!**/__tests__",
-    "!**/__fixtures__",
-    "!**/__mocks__",
-    "android",
+    "android/src",
+    "android/build.gradle",
+    "android/CMakeLists.txt",
+    "android/gradle.properties",
     "ios",
-    "cpp",
-    "react-native-jsi-contacts.podspec",
-    "!lib/typescript/example",
-    "!android/build",
-    "!ios/build"
+    "react-native-jsi-contacts.podspec"
   ],
   "scripts": {
     "test": "jest",
@@ -34,7 +30,10 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "jsi",
+    "contacts",
+    "library"
   ],
   "repository": "https://github.com/mrousavy/react-native-jsi-contacts",
   "author": "Marc Rousavy <me@mrousavy.com> (https://github.com/mrousavy)",
