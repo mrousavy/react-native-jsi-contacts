@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, Alert } from 'react-native';
+import { StyleSheet, View, Text, Alert, FlatList } from 'react-native';
 import { Contact, getContactsAsync } from 'react-native-jsi-contacts';
 import { check, PERMISSIONS, request } from 'react-native-permissions';
 
@@ -18,8 +18,10 @@ export default function App() {
       }
     }
     console.log(`Contacts Permission: ${permission}`);
+    const begin = global.performance.now();
     const contacts = await getContactsAsync();
-    console.log(`Got: ${JSON.stringify(contacts)}`);
+    const end = global.performance.now();
+    console.log(`Got: ${contacts.length} contacts in ${end - begin}ms.`);
     setResult(contacts);
   }, []);
 
@@ -28,13 +30,18 @@ export default function App() {
   }, [load]);
 
   const str = React.useMemo(
-    () => result.map((c) => c.firstName).join(', '),
+    () => result.map((c) => c.displayName).join(', '),
     [result]
   );
 
   return (
     <View style={styles.container}>
-      <Text>Result: {str}</Text>
+      <FlatList
+        data={result}
+        renderItem={({ item }) => (
+          <Text style={{ marginTop: 5 }}>{item.displayName}</Text>
+        )}
+      />
     </View>
   );
 }
@@ -44,6 +51,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 20,
   },
   box: {
     width: 60,
