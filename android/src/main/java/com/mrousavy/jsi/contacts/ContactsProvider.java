@@ -79,172 +79,29 @@ public class ContactsProvider {
     addAll(JUST_ME_PROJECTION);
   }};
 
-  private static final List<String> PHOTO_PROJECTION = new ArrayList<String>() {{
-    add(Contactables.PHOTO_URI);
-  }};
-
   private final ContentResolver contentResolver;
 
   public ContactsProvider(ContentResolver contentResolver) {
     this.contentResolver = contentResolver;
   }
 
-  public Map<String, Contact> getContactsMatchingString(String searchString) {
-    Map<String, Contact> matchingContacts;
-    {
-      Cursor cursor = contentResolver.query(
-        ContactsContract.Data.CONTENT_URI,
-        FULL_PROJECTION.toArray(new String[FULL_PROJECTION.size()]),
-        ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " LIKE ? OR " +
-          Organization.COMPANY + " LIKE ?",
-        new String[]{"%" + searchString + "%", "%" + searchString + "%"},
-        null
-      );
-
-      try {
-        matchingContacts = loadContactsFrom(cursor);
-      } finally {
-        if (cursor != null) {
-          cursor.close();
-        }
-      }
-    }
-
-    return matchingContacts;
-  }
-
-
-  public Map<String, Contact> getContactsByPhoneNumber(String phoneNumber) {
-    Map<String, Contact> matchingContacts;
-    {
-      Cursor cursor = contentResolver.query(
-        ContactsContract.Data.CONTENT_URI,
-        FULL_PROJECTION.toArray(new String[FULL_PROJECTION.size()]),
-        ContactsContract.CommonDataKinds.Phone.NUMBER + " LIKE ? OR "
-          + ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER + " LIKE ?",
-        new String[]{"%" + phoneNumber + "%", "%" + phoneNumber + "%"},
-        null
-      );
-
-      try {
-        matchingContacts = loadContactsFrom(cursor);
-      } finally {
-        if (cursor != null) {
-          cursor.close();
-        }
-      }
-    }
-
-    return matchingContacts;
-  }
-
-  public Map<String, Contact> getContactsByEmailAddress(String emailAddress) {
-    Map<String, Contact> matchingContacts;
-    {
-      Cursor cursor = contentResolver.query(
-        ContactsContract.Data.CONTENT_URI,
-        FULL_PROJECTION.toArray(new String[FULL_PROJECTION.size()]),
-        ContactsContract.CommonDataKinds.Email.ADDRESS + " LIKE ?",
-        new String[]{"%" + emailAddress + "%"},
-        null
-      );
-
-      try {
-        matchingContacts = loadContactsFrom(cursor);
-      } finally {
-        if (cursor != null) {
-          cursor.close();
-        }
-      }
-    }
-
-    return matchingContacts;
-  }
-
-  public Contact getContactByRawId(String contactRawId) {
-    // Get Contact Id from Raw Contact Id
-    String[] projections = new String[]{ContactsContract.RawContacts.CONTACT_ID};
-    String select = ContactsContract.RawContacts._ID + "= ?";
-    String[] selectionArgs = new String[]{contactRawId};
-    Cursor rawCursor = contentResolver.query(ContactsContract.RawContacts.CONTENT_URI, projections, select, selectionArgs, null);
-    String contactId = null;
-    if (rawCursor.getCount() == 0) {
-      /*contact id not found */
-    }
-
-    if (rawCursor.moveToNext()) {
-      int columnIndex;
-      columnIndex = rawCursor.getColumnIndex(ContactsContract.RawContacts.CONTACT_ID);
-      if (columnIndex == -1) {
-        /* trouble getting contact id */
-      } else {
-        contactId = rawCursor.getString(columnIndex);
-      }
-    }
-
-    rawCursor.close();
-
-    //Now that we have the real contact id, fetch information
-    return getContactById(contactId);
-  }
-
-  public Contact getContactById(String contactId) {
-    Map<String, Contact> matchingContacts;
-    {
-      Cursor cursor = contentResolver.query(
-        ContactsContract.Data.CONTENT_URI,
-        FULL_PROJECTION.toArray(new String[FULL_PROJECTION.size()]),
-        ContactsContract.RawContacts.CONTACT_ID + " = ?",
-        new String[]{contactId},
-        null
-      );
-
-      try {
-        matchingContacts = loadContactsFrom(cursor);
-      } finally {
-        if (cursor != null) {
-          cursor.close();
-        }
-      }
-    }
-
-    if(matchingContacts.values().size() > 0) {
-      return matchingContacts.values().iterator().next();
-    }
-
-    return null;
-  }
-
-  public Integer getContactsCount() {
-    Cursor cursor =  contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-    int count = cursor.getCount();
-
-    return count;
-  }
-
   public Map<String, Contact> getContacts() {
     Map<String, Contact> justMe;
     {
-      Cursor cursor = contentResolver.query(
+      try (Cursor cursor = contentResolver.query(
         Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI, ContactsContract.Contacts.Data.CONTENT_DIRECTORY),
         JUST_ME_PROJECTION.toArray(new String[JUST_ME_PROJECTION.size()]),
         null,
         null,
         null
-      );
-
-      try {
+      )) {
         justMe = loadContactsFrom(cursor);
-      } finally {
-        if (cursor != null) {
-          cursor.close();
-        }
       }
     }
 
     Map<String, Contact> everyoneElse;
     {
-      Cursor cursor = contentResolver.query(
+      try (Cursor cursor = contentResolver.query(
         ContactsContract.Data.CONTENT_URI,
         FULL_PROJECTION.toArray(new String[FULL_PROJECTION.size()]),
         ContactsContract.Data.MIMETYPE + "=? OR "
@@ -268,14 +125,8 @@ public class ContactsProvider {
           Event.CONTENT_ITEM_TYPE,
         },
         null
-      );
-
-      try {
+      )) {
         everyoneElse = loadContactsFrom(cursor);
-      } finally {
-        if (cursor != null) {
-          cursor.close();
-        }
       }
     }
 
@@ -285,11 +136,9 @@ public class ContactsProvider {
 
   @NonNull
   private Map<String, Contact> loadContactsFrom(Cursor cursor) {
-
     Map<String, Contact> map = new LinkedHashMap<>();
 
     while (cursor != null && cursor.moveToNext()) {
-
       int columnIndexContactId = cursor.getColumnIndex(ContactsContract.Data.CONTACT_ID);
       int columnIndexId = cursor.getColumnIndex(ContactsContract.Data._ID);
       int columnIndexRawContactId = cursor.getColumnIndex(ContactsContract.Data.RAW_CONTACT_ID);
@@ -527,7 +376,6 @@ public class ContactsProvider {
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException | NullPointerException e) {
               // whoops, birthday isn't in the format we expect
               Log.w("ContactsProvider", e.toString());
-
             }
           }
           break;
@@ -538,28 +386,5 @@ public class ContactsProvider {
     }
 
     return map;
-  }
-
-  public String getPhotoUriFromContactId(String contactId) {
-    Cursor cursor = contentResolver.query(
-      ContactsContract.Data.CONTENT_URI,
-      PHOTO_PROJECTION.toArray(new String[PHOTO_PROJECTION.size()]),
-      ContactsContract.RawContacts.CONTACT_ID + " = ?",
-      new String[]{contactId},
-      null
-    );
-    try {
-      if (cursor != null && cursor.moveToNext()) {
-        String rawPhotoURI = cursor.getString(cursor.getColumnIndex(Contactables.PHOTO_URI));
-        if (!TextUtils.isEmpty(rawPhotoURI)) {
-          return rawPhotoURI;
-        }
-      }
-    } finally {
-      if (cursor != null) {
-        cursor.close();
-      }
-    }
-    return null;
   }
 }
