@@ -13,8 +13,11 @@ using namespace jni;
 
 local_ref<jobject> JContact::getValueByName(const std::string &name) {
     auto field = getClass()->getField<jobject>(name.c_str());
-    auto value = getFieldValue(field);
-    return value;
+    if (field) {
+        return getFieldValue(field);
+    } else {
+        return nullptr;
+    }
 }
 
 }

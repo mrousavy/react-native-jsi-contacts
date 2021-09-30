@@ -18,7 +18,7 @@ struct JContactsProvider : public JavaClass<JContactsProvider> {
     static constexpr auto kJavaDescriptor = "Lcom/mrousavy/jsi/contacts/ContactsProvider;";
 
 public:
-    local_ref<JArrayClass<JContact::javaobject>> getContacts() const;
+    local_ref<JMap<JString, JContact::javaobject>> getContacts() const;
 };
 
 } // namespace vision

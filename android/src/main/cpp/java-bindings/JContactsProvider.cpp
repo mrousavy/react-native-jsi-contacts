@@ -13,8 +13,8 @@ namespace mrousavy {
 using namespace facebook;
 using namespace jni;
 
-local_ref<JArrayClass<JContact::javaobject>> JContactsProvider::getContacts() const {
-    auto getContactsMethod = getClass()->getMethod<JArrayClass<JContact::javaobject>()>("getContacts");
+local_ref<JMap<JString, JContact::javaobject>> JContactsProvider::getContacts() const {
+    auto getContactsMethod = getClass()->getMethod<JMap<JString, JContact::javaobject>()>("getContacts");
 
     auto result = getContactsMethod(self());
     return make_local(result);

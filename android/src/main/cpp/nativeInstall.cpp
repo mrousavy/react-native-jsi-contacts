@@ -42,6 +42,5 @@ Java_com_mrousavy_jsi_contacts_JsiContactsModule_nativeInstall(JNIEnv *env,
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
     return facebook::jni::initialize(vm, [] {
-        mrousavy::JContact::registerNatives();
     });
 }

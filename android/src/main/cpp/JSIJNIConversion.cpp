@@ -22,6 +22,8 @@
 
 #include "java-bindings/JArrayList.h"
 #include "java-bindings/JHashMap.h"
+#include "java-bindings/JContact.h"
+#include "ContactHostObject.h"
 
 namespace vision {
 
@@ -54,19 +56,26 @@ jsi::Value JSIJNIConversion::convertJNIObjectToJSIValue(jsi::Runtime &runtime, c
 
     return jsi::String::createFromUtf8(runtime, object->toString());
 
+  } else if (object->isInstanceOf(mrousavy::JContact::javaClassStatic())) {
+      // Contact
+
+      auto contact = static_ref_cast<mrousavy::JContact>(object);
+      auto hostObject = std::make_shared<mrousavy::ContactHostObject>(contact);
+      return jsi::Object::createFromHostObject(runtime, hostObject);
+
   } else if (object->isInstanceOf(JArrayList<jobject>::javaClassStatic())) {
-    // ArrayList<E>
+      // ArrayList<E>
 
-    auto arrayList = static_ref_cast<JArrayList<jobject>>(object);
-    auto size = arrayList->size();
+      auto arrayList = static_ref_cast<JArrayList<jobject>>(object);
+      auto size = arrayList->size();
 
-    auto result = jsi::Array(runtime, size);
-    size_t i = 0;
-    for (const auto& item : *arrayList) {
-      result.setValueAtIndex(runtime, i, convertJNIObjectToJSIValue(runtime, item));
-      i++;
-    }
-    return result;
+      auto result = jsi::Array(runtime, size);
+      size_t i = 0;
+      for (const auto& item : *arrayList) {
+          result.setValueAtIndex(runtime, i, convertJNIObjectToJSIValue(runtime, item));
+          i++;
+      }
+      return result;
 
   } else if (object->isInstanceOf(react::ReadableArray::javaClassStatic())) {
     // ReadableArray
@@ -94,13 +103,13 @@ jsi::Value JSIJNIConversion::convertJNIObjectToJSIValue(jsi::Runtime &runtime, c
     return result;
 
   } else if (object->isInstanceOf(react::ReadableMap::javaClassStatic())) {
-    // ReadableMap
+      // ReadableMap
 
-    static const auto toHashMapFunc = react::ReadableMap::javaClassLocal()->getMethod<jni::JHashMap<jstring, jobject>()>("toHashMap");
+      static const auto toHashMapFunc = react::ReadableMap::javaClassLocal()->getMethod<jni::JHashMap<jstring, jobject>()>("toHashMap");
 
-    // call recursive, this time HashMap<K, V>
-    auto hashMap = toHashMapFunc(object.get());
-    return convertJNIObjectToJSIValue(runtime, hashMap);
+      // call recursive, this time HashMap<K, V>
+      auto hashMap = toHashMapFunc(object.get());
+      return convertJNIObjectToJSIValue(runtime, hashMap);
 
   }
 

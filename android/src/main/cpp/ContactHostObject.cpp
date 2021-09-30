@@ -6,6 +6,7 @@
 
 #include <jsi/jsi.h>
 #include <fbjni/fbjni.h>
+#include "JSIJNIConversion.h"
 
 namespace mrousavy {
 
@@ -23,10 +24,16 @@ std::vector<jsi::PropNameID> ContactHostObject::getPropertyNames(jsi::Runtime &r
     std::vector<jsi::PropNameID> result;
     result.push_back(jsi::PropNameID::forUtf8(rt, std::string("// TODO")));
     return result;
-
 }
 
-jsi::Value ContactHostObject::get(jsi::Runtime &, const jsi::PropNameID &name) {
+jsi::Value ContactHostObject::get(jsi::Runtime& runtime, const jsi::PropNameID& propName) {
+    auto name = propName.utf8(runtime);
+
+    auto value = _contact->getValueByName(name);
+    if (value) {
+        return vision::JSIJNIConversion::convertJNIObjectToJSIValue(runtime, value);
+    }
+
     return jsi::Value::undefined();
 }
 
