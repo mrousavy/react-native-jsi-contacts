@@ -140,6 +140,8 @@ jsi::Value JSIJNIConversion::convertJNIObjectToJSIValue(jsi::Runtime &runtime, c
     for (const auto& entry : *map) {
       auto key = entry.first->toString();
       auto value = entry.second;
+      if (!value) continue;
+
       auto jsiValue = convertJNIObjectToJSIValue(runtime, value);
       result.setProperty(runtime, key.c_str(), jsiValue);
     }
