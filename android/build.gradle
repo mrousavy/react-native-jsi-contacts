@@ -21,33 +21,6 @@ def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['JsiContacts_' + name]).toInteger()
 }
 
-def found = false
-def reactNativeDir = null
-def androidSourcesName = 'React Native sources'
-def parentDir = rootProject.projectDir
-
-if (rootProject.ext.has('reactNativeAndroidRoot')) {
-  reactNativeDir = rootProject.ext.get('reactNativeAndroidRoot')
-} else {
-  reactNativeDir = new File(projectDir, '/../node_modules/react-native/android')
-}
-
-if (reactNativeDir.exists()) {
-  found = true
-} else {
-  def stepUp = "/../"
-  1.upto(5, {
-    if (found) return true
-
-    stepUp = stepUp + "../"
-    reactNativeDir = new File(stepUp, 'node_modules/react-native/android')
-
-    if (reactNativeDir.exists()) {
-      found = true
-    }
-  })
-}
-
 android {
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
   buildToolsVersion getExtOrDefault('buildToolsVersion')
@@ -63,7 +36,7 @@ android {
         cppFlags "-fexceptions", "-frtti", "-std=c++1y", "-DONANDROID"
         abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
         arguments '-DANDROID_STL=c++_shared',
-          "-DNODE_MODULES_DIR=${reactNativeDir.parentFile.parentFile.toString()}"
+          "-DNODE_MODULES_DIR=${rootDir}/../node_modules"
       }
     }
 
@@ -103,21 +76,73 @@ repositories {
   jcenter()
   google()
 
-  if (reactNativeDir.exists()) {
+  def found = false
+  def defaultDir = null
+  def androidSourcesName = 'React Native sources'
+
+  if (rootProject.ext.has('reactNativeAndroidRoot')) {
+    defaultDir = rootProject.ext.get('reactNativeAndroidRoot')
+  } else {
+    defaultDir = new File(
+            projectDir,
+            '/../../../node_modules/react-native/android'
+    )
+  }
+
+  if (defaultDir.exists()) {
     maven {
-      url reactNativeDir.toString()
+      url defaultDir.toString()
       name androidSourcesName
     }
-    logger.info(":${project.name}:reactNativeAndroidRoot ${reactNativeDir.canonicalPath}")
+
+    logger.info(":${project.name}:reactNativeAndroidRoot ${defaultDir.canonicalPath}")
+    found = true
+  } else {
+    def parentDir = rootProject.projectDir
+
+    1.upto(5, {
+      if (found) return true
+      parentDir = parentDir.parentFile
+
+      def androidSourcesDir = new File(
+              parentDir,
+              'node_modules/react-native'
+      )
+
+      def androidPrebuiltBinaryDir = new File(
+              parentDir,
+              'node_modules/react-native/android'
+      )
+
+      if (androidPrebuiltBinaryDir.exists()) {
+        maven {
+          url androidPrebuiltBinaryDir.toString()
+          name androidSourcesName
+        }
+
+        logger.info(":${project.name}:reactNativeAndroidRoot ${androidPrebuiltBinaryDir.canonicalPath}")
+        found = true
+      } else if (androidSourcesDir.exists()) {
+        maven {
+          url androidSourcesDir.toString()
+          name androidSourcesName
+        }
+
+        logger.info(":${project.name}:reactNativeAndroidRoot ${androidSourcesDir.canonicalPath}")
+        found = true
+      }
+    })
   }
 
   if (!found) {
     throw new GradleException(
-            "${project.name}: unable to locate React Native android sources. ${reactNativeDir.toString()} " +
+            "${project.name}: unable to locate React Native android sources. " +
                     "Ensure you have you installed React Native as a dependency in your project and try again."
     )
   }
 }
+
+def reactNativeDir = new File("$projectDir/../../react-native")
 
 dependencies {
   // noinspection GradleDynamicVersion
