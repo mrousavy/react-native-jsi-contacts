@@ -1,6 +1,26 @@
 # react-native-jsi-contacts
 
-A contacts library for React Native using JSI
+The current **react-native-contacts** library uses the _React Native Bridge_ to convert the native Java/Objective-C types to JavaScript values. This is asynchronous, batched, and serializes the huge contacts list in the native world (write into `WritableArray`/`WritableMap`, then let the Bridge convert to JSON), then deserializes it on the JavaScript side using JSON. It is therefore slow.
+
+react-native-jsi-contacts uses JSI to be way faster.
+
+* Direct invocation (no batching!)
+* No JSON serialization happening
+* Directly convert object into JSI Types
+* Lazily get individual Contact fields (`jsi::HostObject` lazy-get)
+
+## Performance
+
+The library uses the same native "`getContacts()`" function as [react-native-contacts](https://github.com/morenoh149/react-native-contacts), so the only difference is the conversion speed.
+
+For 25 contacts, I have measured an average speed increase of ~35%, this greatly scales with the amount of contacts you have though.
+
+```
+ LOG  JSI: Contacts Permission: granted
+ LOG  JSI: Got: 25 contacts in 55.14947900176048ms.
+ LOG  Bridge: Contacts Permission: granted
+ LOG  Bridge: Got: 25 contacts in 74.15260401368141ms.
+```
 
 ## Installation
 
@@ -30,3 +50,8 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 ## License
 
 MIT
+
+## Thanks
+
+* Thanks to GalaxyCard for sponsoring this project
+* Thanks to react-native-contacts for the native "`getContacts()`" implementation
