@@ -1,6 +1,10 @@
+interface JSIContactsInterface {
+  getContactsAsync(): Promise<Contact[]>;
+}
+
 // Globally injected JSI Function declarations
 declare global {
-  function __JSIContacts_getContactsAsync(): Promise<Contact[]>;
+  var JSIContacts: JSIContactsInterface;
 }
 
 export interface Contact {
@@ -8,5 +12,5 @@ export interface Contact {
 }
 
 export function getContactsAsync(): Promise<Contact[]> {
-  return __JSIContacts_getContactsAsync();
+  return JSIContacts.getContactsAsync();
 }
