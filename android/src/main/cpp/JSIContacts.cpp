@@ -7,7 +7,15 @@ jsi::Value JSIContacts::get(jsi::Runtime& runtime, const jsi::PropNameID& propNa
     auto name = propName.utf8(runtime);
 
     if (name == "getContactsAsync") {
-        return this->getContactsAsync(runtime);
+        return jsi::Function::createFromHostFunction(runtime,
+                                                     jsi::PropNameID::forAscii(runtime, "getContactsAsync"),
+                                                     0,
+                                                     [this](jsi::Runtime& runtime,
+                                                                 const jsi::Value&,
+                                                                 const jsi::Value* arguments,
+                                                                 size_t count) -> jsi::Value {
+           return this->getContactsAsync(runtime);
+        });
     }
 
     return jsi::Value::undefined();
