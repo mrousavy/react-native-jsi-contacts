@@ -1,11 +1,18 @@
+import groovy.json.JsonSlurper
+import org.apache.tools.ant.filters.ReplaceTokens
+import java.nio.file.Paths
+
 buildscript {
   repositories {
     google()
     jcenter()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:4.2.1'
+    classpath 'com.android.tools.build:gradle:4.2.2'
     classpath 'de.undercouch:gradle-download-task:4.1.2'
   }
 }
@@ -39,7 +46,10 @@ android {
           "-DNODE_MODULES_DIR=${rootDir}/../node_modules"
       }
     }
+  }
 
+  dexOptions {
+    javaMaxHeapSize "4g"
   }
 
   externalNativeBuild {
@@ -73,7 +83,6 @@ android {
 
 repositories {
   mavenCentral()
-  jcenter()
   google()
 
   def found = false
@@ -142,18 +151,17 @@ repositories {
   }
 }
 
-def reactNativeDir = new File("$projectDir/../../react-native")
-
 dependencies {
   // noinspection GradleDynamicVersion
-  api 'com.facebook.react:react-native:+'
-  def rnAAR = fileTree(reactNativeDir.toString()).matching({ it.include "**/**/*.aar" }).singleFile
-  extractJNI(files(rnAAR))
+  implementation 'com.facebook.react:react-native:+'
 
   //noinspection GradleDynamicVersion
   extractHeaders("com.facebook.fbjni:fbjni:+:headers")
   //noinspection GradleDynamicVersion
   extractJNI("com.facebook.fbjni:fbjni:+")
+
+  def rnAAR = fileTree("${rootDir}/../node_modules/react-native/android").matching({ it.include "**/**/*.aar" }).singleFile
+  extractJNI(files(rnAAR))
 }
 
 
@@ -322,7 +330,7 @@ task extractJNIFiles {
 extractJNIFiles.mustRunAfter extractAARHeaders
 
 tasks.whenTaskAdded { task ->
-  if (task.name.contains('externalNativeBuild')) {
+  if (task.name == 'externalNativeBuildDebug' || task.name == 'externalNativeBuildRelease') {
     task.dependsOn(extractAARHeaders)
     task.dependsOn(extractJNIFiles)
     task.dependsOn(prepareThirdPartyNdkHeaders)
