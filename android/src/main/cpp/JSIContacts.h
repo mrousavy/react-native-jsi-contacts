@@ -2,7 +2,7 @@
 #include <jsi/jsi.h>
 #include <ReactCommon/CallInvoker.h>
 #include "ThreadPool.h"
-#include "JContactsProvider.h"
+#include "java-bindings/JContactsProvider.h"
 
 namespace mrousavy {
 

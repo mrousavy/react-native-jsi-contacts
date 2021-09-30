@@ -8,8 +8,7 @@
 #include <fbjni/fbjni.h>
 #include <string>
 #include <react/jni/WritableNativeArray.h>
-
-#include "JContactsProvider.h"
+#include "JContact.h"
 
 namespace mrousavy {
 
@@ -20,7 +19,7 @@ struct JContactsProvider : public JavaClass<JContactsProvider> {
     static constexpr auto kJavaDescriptor = "Lcom/mrousavy/jsi/contacts/ContactsProvider;";
 
 public:
-    local_ref<react::WritableNativeArray::javaobject> getContacts() const;
+    local_ref<jni::JMap<jni::JString, JContact::javaobject>> getContacts() const;
 };
 
 } // namespace vision

@@ -4,7 +4,8 @@
 #include <ReactCommon/CallInvoker.h>
 #include <ReactCommon/CallInvokerHolder.h>
 #include "JSIContacts.h"
-#include "JContactsProvider.h"
+#include "java-bindings/JContactsProvider.h"
+#include "java-bindings/JContact.h"
 
 using namespace facebook;
 using TCallInvoker = jni::alias_ref<react::CallInvokerHolder::javaobject>;
@@ -41,6 +42,6 @@ Java_com_mrousavy_jsi_contacts_JsiContactsModule_nativeInstall(JNIEnv *env,
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
     return facebook::jni::initialize(vm, [] {
-        //mrousavy::JContactsProvider::registerNatives();
+        mrousavy::JContact::registerNatives();
     });
 }

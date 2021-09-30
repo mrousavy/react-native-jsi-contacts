@@ -23,12 +23,14 @@ include_directories(
 
 add_library(jsicontacts  # <-- Library name
         SHARED
-        src/main/cpp/JSIContacts.cpp
-        src/main/cpp/JContactsProvider.cpp
+        src/main/cpp/java-bindings/JContactsProvider.cpp
+        src/main/cpp/java-bindings/JContact.cpp
+        src/main/cpp/java-bindings/JHashMap.cpp
         src/main/cpp/ThreadPool.cpp
         src/main/cpp/nativeInstall.cpp
         src/main/cpp/JSIJNIConversion.cpp
-        src/main/cpp/java-bindings/JHashMap.cpp
+        src/main/cpp/ContactHostObject.cpp
+        src/main/cpp/JSIContacts.cpp
 )
 
 set_target_properties(
