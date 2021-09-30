@@ -63,6 +63,28 @@ jsi::Value JSIJNIConversion::convertJNIObjectToJSIValue(jsi::Runtime &runtime, c
       auto hostObject = std::make_shared<mrousavy::ContactHostObject>(contact);
       return jsi::Object::createFromHostObject(runtime, hostObject);
 
+  } else if (object->isInstanceOf(mrousavy::JContact::JItem::javaClassStatic())) {
+      // Contact.Item
+
+      auto item = static_ref_cast<mrousavy::JContact::JItem>(object);
+
+      jsi::Object result(runtime);
+      result.setProperty(runtime, "id", convertJNIObjectToJSIValue(runtime, item->getId()));
+      result.setProperty(runtime, "label", convertJNIObjectToJSIValue(runtime, item->getLabel()));
+      result.setProperty(runtime, "value", convertJNIObjectToJSIValue(runtime, item->getValue()));
+      return result;
+
+  } else if (object->isInstanceOf(mrousavy::JContact::JBirthday::javaClassStatic())) {
+      // Contact.Birthday
+
+      auto birthday = static_ref_cast<mrousavy::JContact::JBirthday>(object);
+
+      jsi::Object result(runtime);
+      result.setProperty(runtime, "year", jsi::Value(birthday->getYear()));
+      result.setProperty(runtime, "month", jsi::Value(birthday->getMonth()));
+      result.setProperty(runtime, "day", jsi::Value(birthday->getDay()));
+      return result;
+
   } else if (object->isInstanceOf(JArrayList<jobject>::javaClassStatic())) {
       // ArrayList<E>
 

@@ -106,4 +106,34 @@ using namespace jni;
         return getFieldValue(field);
     }
 
+
+    // JItem
+    local_ref<jstring> JContact::JItem::getId() {
+        auto field = getClass()->getField<jstring>("id");
+        return getFieldValue(field);
+    }
+    local_ref<jstring> JContact::JItem::getLabel() {
+        auto field = getClass()->getField<jstring>("label");
+        return getFieldValue(field);
+    }
+    local_ref<jstring> JContact::JItem::getValue() {
+        auto field = getClass()->getField<jstring>("value");
+        return getFieldValue(field);
+    }
+
+
+    // JBirthday
+    jint JContact::JBirthday::getYear() {
+        auto field = getClass()->getField<jint>("year");
+        return getFieldValue(field);
+    }
+    jint JContact::JBirthday::getMonth() {
+        auto field = getClass()->getField<jint>("month");
+        return getFieldValue(field);
+    }
+    jint JContact::JBirthday::getDay() {
+        auto field = getClass()->getField<jint>("day");
+        return getFieldValue(field);
+    }
+
 }
