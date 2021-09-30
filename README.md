@@ -37,7 +37,7 @@ For 25 contacts, I have measured an average speed increase of ~35%, this greatly
     JsiContactsModule.install(reactApplicationContext);
     ```
 
-    to your `JSIModulePackage`. See [the react-native-mmkv installation guide](https://github.com/mrousavy/react-native-mmkv/blob/master/INSTALL.md) on how to create a `JSIModulePackage`.
+    to your `JSIModulePackage`'s `getJSIModules` method. See [the react-native-mmkv installation guide](https://github.com/mrousavy/react-native-mmkv/blob/master/INSTALL.md) on how to create a `JSIModulePackage`.
 
 ## Sponsors
 
@@ -47,10 +47,27 @@ This project is sponsored by [Galaxycard](https://www.galaxycard.in).
 
 ## Usage
 
+Get a list of all contacts:
+
 ```js
 import { getContactsAsync } from "react-native-jsi-contacts";
 
 const contacts = await getContactsAsync();
+```
+
+Get a hashsum to compare for any changes in the contact book:
+
+```js
+import { getHashAsync } from "react-native-jsi-contacts";
+import { MMKV } from "react-native-mmkv";
+
+const storage = new MMKV();
+
+const hash = await getHashAsync();
+const previousHash = storage.getString("contactsHash")
+if (previousHash !== hash) {
+  // get all contacts and reload hash now.
+}
 ```
 
 ## Contributing
