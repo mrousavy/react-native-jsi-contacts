@@ -5220,6 +5220,11 @@ react-native-codegen@^0.0.7:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
+react-native-contacts@^7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-7.0.2.tgz#de9a10f37fb3f7583dbcba7a9fa46d370725c47b"
+  integrity sha512-LCDznIOkVpdTPk18Wp94sLLpbQNKw0Y0tvqbEi5ik610UoQxzteq6Plqdo3mGyccgGLIKD6VMNRgac4mk0Fz2w==
+
 react-native-permissions@^3.0.5:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.0.5.tgz#94542a343abdac801fa0a4593ea2c751cb45c41f"
