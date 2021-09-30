@@ -1,5 +1,5 @@
 interface JSIContactsInterface {
-  getContactsAsync(): Promise<Contact[]>;
+  getContactsAsync(): Promise<Record<Contact['contactId'], Contact>>;
 }
 
 // Globally injected JSI Function declarations
@@ -7,14 +7,10 @@ declare global {
   var JSIContacts: JSIContactsInterface;
 }
 
-export interface EmailAddress {
+export interface Item {
+  id: string;
   label: string;
-  email: string;
-}
-
-export interface PhoneNumber {
-  label: string;
-  number: string;
+  value: string;
 }
 
 export interface PostalAddress {
@@ -42,27 +38,29 @@ export interface Birthday {
 }
 
 export interface Contact {
-  recordID: string;
-  backTitle: string;
-  company: string | null;
-  emailAddresses: EmailAddress[];
+  contactId: string;
   displayName: string;
-  familyName: string;
   givenName: string;
   middleName: string;
-  jobTitle: string;
-  phoneNumbers: PhoneNumber[];
-  hasThumbnail: boolean;
-  thumbnailPath: string;
-  postalAddresses: PostalAddress[];
+  familyName: string;
   prefix: string;
   suffix: string;
+  company: string;
+  jobTitle: string;
   department: string;
-  birthday: Birthday;
-  imAddresses: InstantMessageAddress[];
   note: string;
+  urls: Item[];
+  instantMessengers: InstantMessageAddress[];
+  hasPhoto: boolean;
+  photoUri: string;
+  emails: Item[];
+  phones: Item[];
+  postalAddresses: PostalAddress[];
+  birthday: Birthday;
 }
 
-export function getContactsAsync(): Promise<Contact[]> {
+export function getContactsAsync(): Promise<
+  Record<Contact['contactId'], Contact>
+> {
   return JSIContacts.getContactsAsync();
 }
