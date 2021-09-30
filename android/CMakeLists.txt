@@ -27,6 +27,8 @@ add_library(jsicontacts  # <-- Library name
         src/main/cpp/JContactsProvider.cpp
         src/main/cpp/ThreadPool.cpp
         src/main/cpp/nativeInstall.cpp
+        src/main/cpp/JSIJNIConversion.cpp
+        src/main/cpp/java-bindings/JHashMap.cpp
 )
 
 set_target_properties(

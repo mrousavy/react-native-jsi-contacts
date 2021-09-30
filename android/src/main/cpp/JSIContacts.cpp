@@ -2,6 +2,7 @@
 #include <thread>
 #include <fbjni/fbjni.h>
 #include <react/jni/WritableNativeMap.h>
+#include "JSIJNIConversion.h"
 
 namespace mrousavy {
 
@@ -49,7 +50,8 @@ jsi::Value JSIContacts::getContactsAsync(jsi::Runtime& runtime) {
                 // ASYNC
                 this->_callInvoker->invokeAsync([&runtime, resolver, contacts]() {
                     // JS
-                    resolver->call(runtime, jsi::Value(0));
+                    auto jsiValue = vision::JSIJNIConversion::convertJNIObjectToJSIValue(runtime, contacts);
+                    resolver->call(runtime, jsiValue);
                 });
             } catch (std::exception& exception) {
                 auto message = std::string("Failed to get contacts! ") + std::string(exception.what());
