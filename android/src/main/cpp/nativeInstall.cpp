@@ -17,9 +17,13 @@ void install(jsi::Runtime& jsiRuntime,
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_mrousavy_jsi_contacts_JsiContactsModule_nativeInstall(JNIEnv *env, jclass type, jlong jsiRuntimePointer, TCallInvoker jsCallInvokerHolder) {
+Java_com_mrousavy_jsi_contacts_JsiContactsModule_nativeInstall(JNIEnv *env, jclass type, jlong jsiRuntimePointer, jobject jsCallInvokerHolder) {
     auto runtime = reinterpret_cast<jsi::Runtime*>(jsiRuntimePointer);
-    auto jsCallInvoker = jsCallInvokerHolder->cthis()->getCallInvoker();
+
+    auto callInvokerRef = jni::make_local(jsCallInvokerHolder);
+    auto callInvoker = jni::dynamic_ref_cast<react::CallInvokerHolder::javaobject>(callInvokerRef);
+    auto jsCallInvoker = callInvoker->cthis()->getCallInvoker();
+
     if (runtime) {
         install(*runtime, jsCallInvoker);
     }
