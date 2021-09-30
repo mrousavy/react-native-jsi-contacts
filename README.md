@@ -26,10 +26,18 @@ For 25 contacts, I have measured an average speed increase of ~35%, this greatly
 
 ## Installation
 
-```sh
-npm install react-native-jsi-contacts
-```
+1. Install using npm/yarn
+    ```sh
+    npm install react-native-jsi-contacts
+    ```
 
+2. Add this code:
+
+    ```java
+    JsiContactsModule.install(reactApplicationContext);
+    ```
+
+    to your `JSIModulePackage`. See [the react-native-mmkv installation guide](https://github.com/mrousavy/react-native-mmkv/blob/master/INSTALL.md) on how to create a `JSIModulePackage`.
 
 ## Sponsors
 
