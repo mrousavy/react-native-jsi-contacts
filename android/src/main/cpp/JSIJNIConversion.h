@@ -15,9 +15,7 @@ namespace JSIJNIConversion {
 
 using namespace facebook;
 
-jobject convertJSIValueToJNIObject(jsi::Runtime& runtime, const jsi::Value& value); // NOLINT(runtime/references)
-
-jsi::Value convertJNIObjectToJSIValue(jsi::Runtime& runtime, const jni::local_ref<jobject>& object); // NOLINT(runtime/references)
+jsi::Value convertJNIObjectToJSIValue(jsi::Runtime& runtime, const jni::local_ref<jobject>& object);
 
 } // namespace JSIJNIConversion
 
