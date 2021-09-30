@@ -11,7 +11,7 @@ react-native-jsi-contacts uses JSI to be way faster.
 
 ## Performance
 
-The library uses the same native "`getContacts()`" function as [react-native-contacts](https://github.com/morenoh149/react-native-contacts), so the only difference is the conversion speed.
+The library uses almost the same native "`getContacts()`" function as [react-native-contacts](https://github.com/morenoh149/react-native-contacts) (minor tweaks to not use the Bridge types `WritableArray`/`WritableMap`), so the only difference is the conversion speed.
 
 For 25 contacts, I have measured an average speed increase of ~35%, this greatly scales with the amount of contacts you have though.
 
@@ -21,6 +21,8 @@ For 25 contacts, I have measured an average speed increase of ~35%, this greatly
  LOG  Bridge: Contacts Permission: granted
  LOG  Bridge: Got: 25 contacts in 74.15260401368141ms.
 ```
+
+> For 25 contacts, the conversion between the native Java Contacts list and the JavaScript Contacts list takes only ~3 milliseconds!
 
 ## Installation
 
