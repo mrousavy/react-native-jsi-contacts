@@ -32,6 +32,8 @@ import static android.provider.ContactsContract.CommonDataKinds.Website;
 import static android.provider.ContactsContract.CommonDataKinds.Im;
 import static android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 
+import com.facebook.proguard.annotations.DoNotStrip;
+
 public class ContactsProvider {
   public static final int ID_FOR_PROFILE_CONTACT = -1;
 
@@ -87,6 +89,7 @@ public class ContactsProvider {
     this.contentResolver = contentResolver;
   }
 
+  @DoNotStrip
   public Map<String, Contact> getContacts() {
     Map<String, Contact> justMe;
     {
@@ -390,6 +393,7 @@ public class ContactsProvider {
     return map;
   }
 
+  @DoNotStrip
   public String getHash() throws NoSuchAlgorithmException {
     Map<String, Contact> contacts = this.getContacts();
 

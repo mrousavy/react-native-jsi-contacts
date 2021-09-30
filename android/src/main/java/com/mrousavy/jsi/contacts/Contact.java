@@ -5,6 +5,7 @@ import android.provider.ContactsContract;
 import android.text.TextUtils;
 
 import com.facebook.jni.HybridData;
+import com.facebook.proguard.annotations.DoNotStrip;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 
@@ -25,25 +26,45 @@ import static android.provider.ContactsContract.CommonDataKinds.Im;
 import static android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 
 public class Contact {
+  @DoNotStrip
   public String contactId;
+  @DoNotStrip
   public String rawContactId;
+  @DoNotStrip
   public String displayName;
+  @DoNotStrip
   public String givenName = "";
+  @DoNotStrip
   public String middleName = "";
+  @DoNotStrip
   public String familyName = "";
+  @DoNotStrip
   public String prefix = "";
+  @DoNotStrip
   public String suffix = "";
+  @DoNotStrip
   public String company = "";
+  @DoNotStrip
   public String jobTitle = "";
+  @DoNotStrip
   public String department = "";
+  @DoNotStrip
   public String note ="";
+  @DoNotStrip
   public List<Item> urls = new ArrayList<>();
+  @DoNotStrip
   public List<Item> instantMessengers = new ArrayList<>();
+  @DoNotStrip
   public boolean hasPhoto = false;
+  @DoNotStrip
   public String photoUri;
+  @DoNotStrip
   public List<Item> emails = new ArrayList<>();
+  @DoNotStrip
   public List<Item> phones = new ArrayList<>();
+  @DoNotStrip
   public List<Map<String, String>> postalAddresses = new ArrayList<>();
+  @DoNotStrip
   public Birthday birthday;
 
   public Contact(String contactId) {
@@ -51,8 +72,11 @@ public class Contact {
   }
 
   public static class Item {
+    @DoNotStrip
     public String label;
+    @DoNotStrip
     public String value;
+    @DoNotStrip
     public String id;
 
     public Item(String label, String value, String id) {
@@ -68,8 +92,11 @@ public class Contact {
   }
 
   public static class Birthday {
+    @DoNotStrip
     public int year = 0;
+    @DoNotStrip
     public int month = 0;
+    @DoNotStrip
     public int day = 0;
 
     public Birthday(int year, int month, int day) {
@@ -85,7 +112,6 @@ public class Contact {
   }
 
   public static class PostalAddress {
-
     public static HashMap<String, String> postalAddressFromCursor(Cursor cursor) {
       HashMap<String, String> map = new HashMap<>();
       map.put("label", getLabel(cursor));
