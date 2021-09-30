@@ -16,7 +16,6 @@ import android.util.Log;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeArray;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,7 +93,7 @@ public class ContactsProvider {
     this.contentResolver = contentResolver;
   }
 
-  public WritableArray getContactsMatchingString(String searchString) {
+  public Map<String, Contact> getContactsMatchingString(String searchString) {
     Map<String, Contact> matchingContacts;
     {
       Cursor cursor = contentResolver.query(
@@ -115,15 +114,11 @@ public class ContactsProvider {
       }
     }
 
-    WritableArray contacts = Arguments.createArray();
-    for (Contact contact : matchingContacts.values()) {
-      contacts.pushMap(contact.toMap());
-    }
-    return contacts;
+    return matchingContacts;
   }
 
 
-  public WritableArray getContactsByPhoneNumber(String phoneNumber) {
+  public Map<String, Contact> getContactsByPhoneNumber(String phoneNumber) {
     Map<String, Contact> matchingContacts;
     {
       Cursor cursor = contentResolver.query(
@@ -144,14 +139,10 @@ public class ContactsProvider {
       }
     }
 
-    WritableArray contacts = Arguments.createArray();
-    for (Contact contact : matchingContacts.values()) {
-      contacts.pushMap(contact.toMap());
-    }
-    return contacts;
+    return matchingContacts;
   }
 
-  public WritableArray getContactsByEmailAddress(String emailAddress) {
+  public Map<String, Contact> getContactsByEmailAddress(String emailAddress) {
     Map<String, Contact> matchingContacts;
     {
       Cursor cursor = contentResolver.query(
@@ -171,15 +162,10 @@ public class ContactsProvider {
       }
     }
 
-    WritableArray contacts = Arguments.createArray();
-    for (Contact contact : matchingContacts.values()) {
-      contacts.pushMap(contact.toMap());
-    }
-    return contacts;
+    return matchingContacts;
   }
 
-  public WritableMap getContactByRawId(String contactRawId) {
-
+  public Contact getContactByRawId(String contactRawId) {
     // Get Contact Id from Raw Contact Id
     String[] projections = new String[]{ContactsContract.RawContacts.CONTACT_ID};
     String select = ContactsContract.RawContacts._ID + "= ?";
@@ -206,8 +192,7 @@ public class ContactsProvider {
     return getContactById(contactId);
   }
 
-  public WritableMap getContactById(String contactId) {
-
+  public Contact getContactById(String contactId) {
     Map<String, Contact> matchingContacts;
     {
       Cursor cursor = contentResolver.query(
@@ -228,7 +213,7 @@ public class ContactsProvider {
     }
 
     if(matchingContacts.values().size() > 0) {
-      return matchingContacts.values().iterator().next().toMap();
+      return matchingContacts.values().iterator().next();
     }
 
     return null;
@@ -241,7 +226,7 @@ public class ContactsProvider {
     return count;
   }
 
-  public WritableNativeArray getContacts() {
+  public Map<String, Contact> getContacts() {
     Map<String, Contact> justMe;
     {
       Cursor cursor = contentResolver.query(
@@ -298,15 +283,8 @@ public class ContactsProvider {
       }
     }
 
-    WritableNativeArray contacts = new WritableNativeArray();
-    for (Contact contact : justMe.values()) {
-      contacts.pushMap(contact.toMap());
-    }
-    for (Contact contact : everyoneElse.values()) {
-      contacts.pushMap(contact.toMap());
-    }
-
-    return contacts;
+    justMe.putAll(everyoneElse);
+    return justMe;
   }
 
   @NonNull
@@ -587,179 +565,5 @@ public class ContactsProvider {
       }
     }
     return null;
-  }
-
-  private static class Contact {
-    private String contactId;
-    private String rawContactId;
-    private String displayName;
-    private String givenName = "";
-    private String middleName = "";
-    private String familyName = "";
-    private String prefix = "";
-    private String suffix = "";
-    private String company = "";
-    private String jobTitle = "";
-    private String department = "";
-    private String note ="";
-    private List<Item> urls = new ArrayList<>();
-    private List<Item> instantMessengers = new ArrayList<>();
-    private boolean hasPhoto = false;
-    private String photoUri;
-    private List<Item> emails = new ArrayList<>();
-    private List<Item> phones = new ArrayList<>();
-    private List<PostalAddressItem> postalAddresses = new ArrayList<>();
-    private Birthday birthday;
-
-
-    public Contact(String contactId) {
-      this.contactId = contactId;
-    }
-
-    public WritableMap toMap() {
-      WritableMap contact = Arguments.createMap();
-      contact.putString("recordID", contactId);
-      contact.putString("rawContactId", rawContactId);
-      contact.putString("givenName", TextUtils.isEmpty(givenName) ? displayName : givenName);
-      contact.putString("displayName", displayName);
-      contact.putString("middleName", middleName);
-      contact.putString("familyName", familyName);
-      contact.putString("prefix", prefix);
-      contact.putString("suffix", suffix);
-      contact.putString("company", company);
-      contact.putString("jobTitle", jobTitle);
-      contact.putString("department", department);
-      contact.putString("note", note);
-      contact.putBoolean("hasThumbnail", this.hasPhoto);
-      contact.putString("thumbnailPath", photoUri == null ? "" : photoUri);
-
-      WritableArray phoneNumbers = Arguments.createArray();
-      for (Item item : phones) {
-        WritableMap map = Arguments.createMap();
-        map.putString("number", item.value);
-        map.putString("label", item.label);
-        map.putString("id", item.id);
-        phoneNumbers.pushMap(map);
-      }
-      contact.putArray("phoneNumbers", phoneNumbers);
-
-      WritableArray urlAddresses = Arguments.createArray();
-      for (Item item : urls) {
-        WritableMap map = Arguments.createMap();
-        map.putString("url", item.value);
-        map.putString("id", item.id);
-        urlAddresses.pushMap(map);
-      }
-      contact.putArray("urlAddresses", urlAddresses);
-
-      WritableArray imAddresses = Arguments.createArray();
-      for (Item item : instantMessengers) {
-        WritableMap map = Arguments.createMap();
-        map.putString("username", item.value);
-        map.putString("service", item.label);
-        imAddresses.pushMap(map);
-      }
-      contact.putArray("imAddresses", imAddresses);
-
-      WritableArray emailAddresses = Arguments.createArray();
-      for (Item item : emails) {
-        WritableMap map = Arguments.createMap();
-        map.putString("email", item.value);
-        map.putString("label", item.label);
-        map.putString("id", item.id);
-        emailAddresses.pushMap(map);
-      }
-      contact.putArray("emailAddresses", emailAddresses);
-
-      WritableArray postalAddresses = Arguments.createArray();
-      for (PostalAddressItem item : this.postalAddresses) {
-        postalAddresses.pushMap(item.map);
-      }
-      contact.putArray("postalAddresses", postalAddresses);
-
-      WritableMap birthdayMap = Arguments.createMap();
-      if (birthday != null) {
-        if (birthday.year > 0) {
-          birthdayMap.putInt("year", birthday.year);
-        }
-        birthdayMap.putInt("month", birthday.month);
-        birthdayMap.putInt("day", birthday.day);
-        contact.putMap("birthday", birthdayMap);
-      }
-
-      return contact;
-    }
-
-    public static class Item {
-      public String label;
-      public String value;
-      public String id;
-
-      public Item(String label, String value, String id) {
-        this.id = id;
-        this.label = label;
-        this.value = value;
-      }
-
-      public Item(String label, String value) {
-        this.label = label;
-        this.value = value;
-      }
-    }
-
-    public static class Birthday {
-      public int year = 0;
-      public int month = 0;
-      public int day = 0;
-
-      public Birthday(int year, int month, int day) {
-        this.year = year;
-        this.month = month;
-        this.day = day;
-      }
-
-      public Birthday(int month, int day) {
-        this.month = month;
-        this.day = day;
-      }
-    }
-
-    public static class PostalAddressItem {
-      public final WritableMap map;
-
-      public PostalAddressItem(Cursor cursor) {
-        map = Arguments.createMap();
-
-        map.putString("label", getLabel(cursor));
-        putString(cursor, "formattedAddress", StructuredPostal.FORMATTED_ADDRESS);
-        putString(cursor, "street", StructuredPostal.STREET);
-        putString(cursor, "pobox", StructuredPostal.POBOX);
-        putString(cursor, "neighborhood", StructuredPostal.NEIGHBORHOOD);
-        putString(cursor, "city", StructuredPostal.CITY);
-        putString(cursor, "region", StructuredPostal.REGION);
-        putString(cursor, "state", StructuredPostal.REGION);
-        putString(cursor, "postCode", StructuredPostal.POSTCODE);
-        putString(cursor, "country", StructuredPostal.COUNTRY);
-      }
-
-      private void putString(Cursor cursor, String key, String androidKey) {
-        final String value = cursor.getString(cursor.getColumnIndex(androidKey));
-        if (!TextUtils.isEmpty(value))
-          map.putString(key, value);
-      }
-
-      static String getLabel(Cursor cursor) {
-        switch (cursor.getInt(cursor.getColumnIndex(StructuredPostal.TYPE))) {
-          case StructuredPostal.TYPE_HOME:
-            return "home";
-          case StructuredPostal.TYPE_WORK:
-            return "work";
-          case StructuredPostal.TYPE_CUSTOM:
-            final String label = cursor.getString(cursor.getColumnIndex(StructuredPostal.LABEL));
-            return label != null ? label : "";
-        }
-        return "other";
-      }
-    }
   }
 }

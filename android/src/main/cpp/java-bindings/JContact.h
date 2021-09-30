@@ -13,19 +13,20 @@ namespace mrousavy {
 using namespace facebook;
 using namespace jni;
 
-struct JContact : public HybridClass<JContact> {
+struct JContact : public JavaClass<JContact> {
     static constexpr auto kJavaDescriptor = "Lcom/mrousavy/jsi/contacts/Contact;";
-    static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
-    static void registerNatives();
 
     local_ref<jobject> getValueByName(const std::string& name);
-private:
-    friend HybridBase;
-    jni::global_ref<JContact::javaobject> javaPart_;
 
-    explicit JContact(jni::alias_ref<JContact::jhybridobject> jThis) :
-    javaPart_(jni::make_global(jThis))
-    {}
+    struct JItem : public JavaClass<JItem> {
+        static constexpr auto kJavaDescriptor = "Lcom/mrousavy/jsi/contacts/Contact$Item;";
+    };
+    struct JBirthday : public JavaClass<JBirthday> {
+        static constexpr auto kJavaDescriptor = "Lcom/mrousavy/jsi/contacts/Contact$Birthday;";
+    };
+    struct JPostalAddressItem : public JavaClass<JPostalAddressItem> {
+        static constexpr auto kJavaDescriptor = "Lcom/mrousavy/jsi/contacts/Contact$PostalAddressItem;";
+    };
 };
 
-} // namespace vision
+} // namespace mrousavy

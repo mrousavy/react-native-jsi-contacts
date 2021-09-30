@@ -6,14 +6,15 @@
 
 #include <jni.h>
 #include <fbjni/fbjni.h>
+#include "JContact.h"
 
 namespace mrousavy {
 
 using namespace facebook;
 using namespace jni;
 
-local_ref<react::WritableNativeArray::javaobject> JContactsProvider::getContacts() const {
-    auto getContactsMethod = getClass()->getMethod<react::WritableNativeArray::javaobject()>("getContacts");
+local_ref<JArrayClass<JContact::javaobject>> JContactsProvider::getContacts() const {
+    auto getContactsMethod = getClass()->getMethod<JArrayClass<JContact::javaobject>()>("getContacts");
 
     auto result = getContactsMethod(self());
     return make_local(result);
