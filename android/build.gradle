@@ -304,6 +304,8 @@ task extractAARHeaders {
     }
   }
 }
+extractAARHeaders.mustRunAfter prepareThirdPartyNdkHeaders
+
 task extractJNIFiles {
   doLast {
     configurations.extractJNI.files.each {
