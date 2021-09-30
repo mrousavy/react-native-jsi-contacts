@@ -12,7 +12,10 @@ import com.facebook.proguard.annotations.DoNotStrip;
 import com.facebook.react.bridge.JavaScriptContextHolder;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.turbomodule.core.CallInvokerHolderImpl;
 
@@ -39,7 +42,11 @@ public class JsiContactsModule extends ReactContextBaseJavaModule {
 
     private static native void nativeInstall(long jsiPtr, CallInvokerHolderImpl callInvoker);
 
-    private static WritableArray getContactsAsync() {
-      return contactsProvider.getContacts();
+    private static WritableNativeMap getContacts() {
+      ReadableArray contacts = contactsProvider.getContacts();
+
+      WritableNativeMap map = new WritableNativeMap();
+      map.putArray("contacts", contacts);
+      return map;
     }
 }

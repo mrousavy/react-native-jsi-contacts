@@ -1,5 +1,7 @@
 #include "JSIContacts.h"
 #include <thread>
+#include <fbjni/fbjni.h>
+#include <react/jni/WritableNativeArray.h>
 
 namespace mrousavy {
 
@@ -36,18 +38,30 @@ jsi::Value JSIContacts::getContactsAsync(jsi::Runtime& runtime) {
         if (count != 2) {
             throw std::runtime_error("Promise Callback called with an unexpected amount of arguments!");
         }
-        auto resolver = arguments[0].asObject(runtime).asFunction(runtime);
-        auto rejecter = arguments[0].asObject(runtime).asFunction(runtime);
+        auto resolver = std::make_shared<jsi::Function>(std::move(arguments[0].asObject(runtime).asFunction(runtime)));
+        auto rejecter = std::make_shared<jsi::Function>(std::move(arguments[1].asObject(runtime).asFunction(runtime)));
 
-        _threadPool.enqueue([this]() {
-            // ASYNC
-            this->_callInvoker->invokeAsync([]() {
-                // JS
+        _threadPool.enqueue([this, &runtime, resolver, rejecter]() {
+            try {
+                jni::ThreadScope scope;
+                auto clzz = jni::findClassStatic("com/mrousavy/jsi/contacts/JsiContactsModule");
+                auto func = clzz->getStaticMethod<int()>("getContacts");
+                auto contacts = func(clzz);
 
-            });
+                // ASYNC
+                this->_callInvoker->invokeAsync([&runtime, resolver]() {
+                    // JS
+                    resolver->call(runtime, jsi::Value(0));
+                });
+            } catch (std::exception& exception) {
+                auto message = std::string("Failed to get contacts! ") + std::string(exception.what());
+                this->_callInvoker->invokeAsync([&runtime, rejecter, message]() {
+                    auto error = jsi::JSError(runtime, message);
+                    rejecter->call(runtime, error.value());
+                });
+            }
         });
 
-        resolver.call(runtime, jsi::Array(runtime, 0));
         return jsi::Value::undefined();
     };
     auto promise = promiseCtor.callAsConstructor(runtime,
