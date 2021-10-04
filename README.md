@@ -9,6 +9,8 @@ react-native-jsi-contacts uses JSI to be way faster.
 * Directly convert object into JSI Types
 * Lazily get individual Contact fields (`jsi::HostObject` lazy-get)
 
+> ⚠️ react-native-jsi-contacts only works on Android. If you want me to implement iOS support, consider funding the project.
+
 ## Performance
 
 The library uses almost the same native "`getContacts()`" function as [react-native-contacts](https://github.com/morenoh149/react-native-contacts) (minor tweaks to not use the Bridge types `WritableArray`/`WritableMap`), so the only difference is the conversion speed.
