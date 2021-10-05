@@ -34,6 +34,7 @@ import static android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 
 import com.facebook.proguard.annotations.DoNotStrip;
 
+@DoNotStrip
 public class ContactsProvider {
   public static final int ID_FOR_PROFILE_CONTACT = -1;
 

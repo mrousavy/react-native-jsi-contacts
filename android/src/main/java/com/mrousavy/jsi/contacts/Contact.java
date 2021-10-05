@@ -25,6 +25,7 @@ import static android.provider.ContactsContract.CommonDataKinds.Website;
 import static android.provider.ContactsContract.CommonDataKinds.Im;
 import static android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 
+@DoNotStrip
 public class Contact {
   @DoNotStrip
   public String contactId;
@@ -71,6 +72,7 @@ public class Contact {
     this.contactId = contactId;
   }
 
+  @DoNotStrip
   public static class Item {
     @DoNotStrip
     public String label;
@@ -91,6 +93,7 @@ public class Contact {
     }
   }
 
+  @DoNotStrip
   public static class Birthday {
     @DoNotStrip
     public int year = 0;
@@ -111,6 +114,7 @@ public class Contact {
     }
   }
 
+  @DoNotStrip
   public static class PostalAddress {
     public static HashMap<String, String> postalAddressFromCursor(Cursor cursor) {
       HashMap<String, String> map = new HashMap<>();
