@@ -1,6 +1,6 @@
 {
   "name": "react-native-jsi-contacts",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "A contacts library for React Native using JSI",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
