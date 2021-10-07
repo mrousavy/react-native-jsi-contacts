@@ -64,10 +64,17 @@ find_library(
         PATHS ${LIBRN_DIR}
         NO_CMAKE_FIND_ROOT_PATH
 )
+find_library(
+        JSI_LIB
+        jsi
+        PATHS ${LIBRN_DIR}
+        NO_CMAKE_FIND_ROOT_PATH
+)
 
 target_link_libraries(
         jsicontacts
         ${log-lib}
+        ${JSI_LIB}
         ${REACT_NATIVE_JNI_LIB}
         ${FBJNI_LIB}
         ${FOLLY_JSON_LIB}
