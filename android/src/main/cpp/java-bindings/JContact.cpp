@@ -11,6 +11,7 @@ namespace mrousavy {
 
 using namespace facebook;
 using namespace jni;
+using namespace vision;
 
     local_ref<jstring> JContact::getContactId() {
         auto field = getClass()->getField<jstring>("contactId");

@@ -13,6 +13,7 @@ namespace mrousavy {
 
 using namespace facebook;
 using namespace jni;
+using namespace vision;
 
 struct JContact : public JavaClass<JContact> {
     static constexpr auto kJavaDescriptor = "Lcom/mrousavy/jsi/contacts/Contact;";
