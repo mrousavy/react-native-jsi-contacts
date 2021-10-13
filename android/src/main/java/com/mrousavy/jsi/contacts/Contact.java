@@ -52,19 +52,19 @@ public class Contact {
   @DoNotStrip
   public String note ="";
   @DoNotStrip
-  public List<Item> urls = new ArrayList<>();
+  public ArrayList<Item> urls = new ArrayList<>();
   @DoNotStrip
-  public List<Item> instantMessengers = new ArrayList<>();
+  public ArrayList<Item> instantMessengers = new ArrayList<>();
   @DoNotStrip
   public boolean hasPhoto = false;
   @DoNotStrip
   public String photoUri;
   @DoNotStrip
-  public List<Item> emails = new ArrayList<>();
+  public ArrayList<Item> emails = new ArrayList<>();
   @DoNotStrip
-  public List<Item> phones = new ArrayList<>();
+  public ArrayList<Item> phones = new ArrayList<>();
   @DoNotStrip
-  public List<Map<String, String>> postalAddresses = new ArrayList<>();
+  public ArrayList<Map<String, String>> postalAddresses = new ArrayList<>();
   @DoNotStrip
   public Birthday birthday;
 
