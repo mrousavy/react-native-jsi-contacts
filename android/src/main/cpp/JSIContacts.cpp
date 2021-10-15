@@ -22,7 +22,7 @@ namespace mrousavy {
         }
         if (name == "getHashAsync") {
             return jsi::Function::createFromHostFunction(runtime,
-                                                         jsi::PropNameID::forAscii(runtime, "getContactsAsync"),
+                                                         jsi::PropNameID::forAscii(runtime, "getHashAsync"),
                                                          0,
                                                          [this](jsi::Runtime& runtime,
                                                                 const jsi::Value&,
